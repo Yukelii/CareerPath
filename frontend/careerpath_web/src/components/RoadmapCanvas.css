@@ -1,0 +1,27 @@
+.roadmap-canvas {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: block;
+}
+
+.roadmap-node {
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.roadmap-node:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.roadmap-node-text {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.roadmap-edge {
+  transition: stroke 0.2s ease;
+}

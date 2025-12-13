@@ -1,0 +1,32 @@
+.header-navbar {
+  background-color: #7b7f72 !important; /* top bar color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+  padding: 1rem 2rem;
+}
+
+.header-navbar .navbar-brand {
+  color: #ffffff !important;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.header-navbar .btn-link,
+.header-navbar .dropdown-toggle {
+  color: #ffffff !important;
+}
+
+.header-navbar .dropdown-menu {
+  background-color: #666a60;
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 0.5rem 0;
+}
+
+.header-navbar .dropdown-item {
+  color: #ffffff;
+  padding: 0.6rem 1.25rem;
+}
+
+.header-navbar .dropdown-item:hover {
+  background-color: #55594f;
+}

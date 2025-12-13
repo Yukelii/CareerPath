@@ -1,0 +1,43 @@
+.roadmap-page {
+  background-color: #111715;        /* full-page dark background */
+  min-height: calc(100vh - 72px);   /* fill below header */
+}
+
+.roadmap-section {
+  padding: 3.5rem 3rem 5rem;
+  max-width: 25000px;   /* keep content centered */
+  margin: 0 auto;
+}
+
+.roadmap-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+
+.divider-line {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.35);
+  width: 3360px;   /* increase this number for longer lines */
+}
+
+
+
+
+.roadmap-title {
+  color: #ffffff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.careers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, auto); /* each column uses card's fixed width */
+  justify-content: center;
+  gap: 2rem 2.5rem;
+}

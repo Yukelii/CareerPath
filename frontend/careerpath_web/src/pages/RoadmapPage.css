@@ -1,0 +1,59 @@
+.roadmap-page-wrapper {
+  background: #f9f9f9;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* BLUR OVERLAY - appears when panel opens */
+.roadmap-blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+.roadmap-page-container {
+  background: #f9f9f9;
+  padding: 2rem 1rem;
+  transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* BLUR effect on canvas when panel opens */
+.roadmap-page-container.blurred {
+  filter: blur(5px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.roadmap-canvas-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.roadmap-page-title {
+  margin: 0 0 2rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .roadmap-page-container.blurred {
+    filter: blur(3px);
+  }
+}
