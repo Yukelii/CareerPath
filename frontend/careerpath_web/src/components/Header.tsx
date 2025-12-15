@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { Menu, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 interface HeaderProps {
@@ -14,9 +15,10 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <Navbar bg="dark" expand="lg" className="header-navbar px-4">
-      <Navbar.Brand href="/" className="fw-bold fs-4">
-        Career Path
-      </Navbar.Brand>
+      <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">
+  Career Path
+</Navbar.Brand>
+
       
       <div className="ms-auto d-flex align-items-center gap-3">
         {/* Search Icon */}

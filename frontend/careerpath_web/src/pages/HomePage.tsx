@@ -3,22 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { RoadmapSection } from '../components/RoadmapSection';
 
-
-// Hardcoded career data - easy to swap with API later
+// Slug-based career IDs
 const CAREERS = [
-  { id: '1', title: 'Front-end Developer' },
-  { id: '2', title: 'Game Developer' },
-  { id: '3', title: 'Software Architect' },
-  { id: '4', title: 'Back-end Developer' },
-  { id: '5', title: 'UX Designer' },
-  { id: '6', title: 'Cyber Security' },
+  { id: 'front-end', title: 'Front-end Developer' },
+  { id: 'game-dev', title: 'Game Developer' },
+  { id: 'software-architect', title: 'Software Architect' },
+  { id: 'back-end', title: 'Back-end Developer' },
+  { id: 'ux-design', title: 'UX Designer' },
+  { id: 'cyber-security', title: 'Cyber Security' },
 ];
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleCardClick = (careerId: string) => {
-    // Navigate to roadmap page with career ID
+    // Go to roadmap page for that career
     navigate(`/roadmap/${careerId}`);
   };
 

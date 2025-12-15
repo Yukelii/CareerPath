@@ -1,24 +1,25 @@
-import { RoadmapNodeData, RoadmapEdgeData } from '../types/gameDevRoadmap';
+import { Position } from '@xyflow/react'; 
+import type { RoadmapData, RoadmapEdgeData, RoadmapNodeData } from '../../types/roadmap';
 
 // COLOR PALETTE
 const COLORS = {
-  intro: '#FFFACD',      // Light yellow for intro
-  core: '#FFEB3B',       // Bright yellow for core (main path)
-  advanced: '#E8E8E8',   // Light gray for advanced/optional
-  white: '#FFFFFF',      // White for supporting nodes
+  intro: '#FFFACD',
+  core: '#FFEB3B',
+  advanced: '#E8E8E8',
+  white: '#FFFFFF',
 };
 
-export const gameDevNodes: RoadmapNodeData[] = [
-   //LEFT COLUMN - Programming Languages & Linear Algebra 
+// NODES
+const gameDevNodes: RoadmapNodeData[] = [
   {
     id: 'g-c-cpp-csharp',
     title: 'C# / C++',
     description: 'Core programming languages for game development',
     level: 'intro',
     color: COLORS.intro,
-    position: { x: 20, y: 700 },
+    position: { x: 20, y: 800 },
     resources: [
-      { type: 'article', label: 'Learn C++', url: '#' },
+      { type: 'article', label: 'Learn C++', url: 'https://drive.google.com/drive/u/0/my-drive' },
       { type: 'video', label: 'C++ Game Dev Basics', url: '#' },
     ],
   },
@@ -28,7 +29,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Alternative languages for game development',
     level: 'intro',
     color: COLORS.intro,
-    position: { x: 20, y: 750 },
+    position: { x: 20, y: 850 },
     resources: [
       { type: 'article', label: 'Rust Game Dev', url: '#' },
       { type: 'article', label: 'Python for Games', url: '#' },
@@ -40,10 +41,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Godot engine scripting language',
     level: 'intro',
     color: COLORS.intro,
-    position: { x: 20, y: 800 },
-    resources: [
-      { type: 'official', label: 'GDScript Docs', url: '#' },
-    ],
+    position: { x: 20, y: 900 },
+    resources: [{ type: 'official', label: 'GDScript Docs', url: '#' }],
   },
   {
     id: 'g-linear-algebra',
@@ -76,9 +75,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 180, y: 230 },
-    resources: [
-      { type: 'article', label: 'Matrix Algebra & Games', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Matrix Algebra & Games', url: '#' }],
   },
   {
     id: 'g-linear-transformation',
@@ -87,9 +84,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 180, y: 180 },
-    resources: [
-      { type: 'article', label: 'Linear Transformation', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Linear Transformation', url: '#' }],
   },
   {
     id: 'g-geometry',
@@ -98,9 +93,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 20, y: 280 },
-    resources: [
-      { type: 'article', label: 'Game Geometry', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Game Geometry', url: '#' }],
   },
   {
     id: 'g-affine-space',
@@ -109,9 +102,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 180, y: 280 },
-    resources: [
-      { type: 'article', label: 'Understanding Affine Space', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Understanding Affine Space', url: '#' }],
   },
   {
     id: 'g-affine-transformation',
@@ -120,9 +111,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 20, y: 330 },
-    resources: [
-      { type: 'article', label: 'Affine Transformations', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Affine Transformations', url: '#' }],
   },
   {
     id: 'g-projection',
@@ -131,9 +120,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 180, y: 330 },
-    resources: [
-      { type: 'article', label: 'Projection in Games', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Projection in Games', url: '#' }],
   },
   {
     id: 'g-orientation',
@@ -142,9 +129,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 180, y: 380 },
-    resources: [
-      { type: 'article', label: 'Orientation of Character', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Orientation of Character', url: '#' }],
   },
   {
     id: 'g-perspective',
@@ -153,9 +138,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 20, y: 380 },
-    resources: [
-      { type: 'article', label: 'Perspective in Games', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Perspective in Games', url: '#' }],
   },
   {
     id: 'g-quaternion',
@@ -176,9 +159,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 20, y: 430 },
-    resources: [
-      { type: 'article', label: 'Orthogonal Projection', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Orthogonal Projection', url: '#' }],
   },
   {
     id: 'g-euler-angle',
@@ -187,12 +168,10 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'intro',
     color: COLORS.intro,
     position: { x: 20, y: 480 },
-    resources: [
-      { type: 'article', label: 'Euler Angles', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Euler Angles', url: '#' }],
   },
 
-  // CENTER COLUMN - Game Engine, Mathematics, Physics (MAIN YELLOW PATH)
+  // CENTER COLUMN - MAIN PATH
   {
     id: 'g-client-side-dev',
     title: 'Client Side Development',
@@ -200,9 +179,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     level: 'core',
     color: COLORS.core,
     position: { x: 510, y: 100 },
-    resources: [
-      { type: 'article', label: 'Client Side Architecture', url: '#' },
-    ],
+    resources: [{ type: 'article', label: 'Client Side Architecture', url: '#' }],
   },
   {
     id: 'g-game-mathematics',
@@ -210,7 +187,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Geometry, logic, algebra, trigonometry for game mechanics',
     level: 'core',
     color: COLORS.core,
-    position: { x: 510, y: 240 },
+    position: { x: 510, y: 300 },
     resources: [
       { type: 'article', label: 'Game Math', url: '#' },
       { type: 'article', label: 'Master Game Physics', url: '#' },
@@ -222,7 +199,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Unity 3D, Unreal Engine, Godot - Choose your platform',
     level: 'core',
     color: COLORS.core,
-    position: { x: 310, y: 500 },
+    position: { x: 310, y: 640 },
     resources: [
       { type: 'official', label: 'Unity', url: '#' },
       { type: 'official', label: 'Unreal Engine', url: '#' },
@@ -235,23 +212,19 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'C#, C++, Python, GDScript for game scripting',
     level: 'core',
     color: COLORS.core,
-    position: { x: 310, y: 700 },
-    resources: [
-      { type: 'article', label: 'Language Comparison', url: '#' },
-    ],
+    position: { x: 310, y: 840 },
+    resources: [{ type: 'article', label: 'Language Comparison', url: '#' }],
   },
- /*
-  // CENTER-RIGHT - Curve, Collision, Dynamics
+
+  // CURVES
   {
     id: 'g-curve',
     title: 'Curve',
     description: 'Smooth paths and animations - Splines, Bezier',
     level: 'white',
     color: COLORS.white,
-    position: { x: 310, y: 360 },
-    resources: [
-      { type: 'article', label: 'Curves in Games', url: '#' },
-    ],
+    position: { x: 510, y: 400 },
+    resources: [{ type: 'article', label: 'Curves in Games', url: '#' }],
   },
   {
     id: 'g-spline',
@@ -259,10 +232,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Smooth curves connecting multiple points',
     level: 'white',
     color: COLORS.white,
-    position: { x: 280, y: 390 },
-    resources: [
-      { type: 'article', label: 'Spline Mathematics', url: '#' },
-    ],
+    position: { x: 420, y: 450 },
+    resources: [{ type: 'article', label: 'Spline Mathematics', url: '#' }],
   },
   {
     id: 'g-hermite',
@@ -270,10 +241,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Polynomial interpolation with tangent control',
     level: 'white',
     color: COLORS.white,
-    position: { x: 340, y: 390 },
-    resources: [
-      { type: 'article', label: 'Hermite Interpolation', url: '#' },
-    ],
+    position: { x: 590, y: 450 },
+    resources: [{ type: 'article', label: 'Hermite Interpolation', url: '#' }],
   },
   {
     id: 'g-bezier',
@@ -281,7 +250,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Control point curves - widely used in graphics',
     level: 'white',
     color: COLORS.white,
-    position: { x: 280, y: 430 },
+    position: { x: 420, y: 500 },
     resources: [
       { type: 'article', label: 'Bezier Curves for Games', url: '#' },
       { type: 'video', label: 'Bezier Explained', url: '#' },
@@ -293,51 +262,33 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Cubic interpolating spline - smooth curves',
     level: 'white',
     color: COLORS.white,
-    position: { x: 340, y: 430 },
-    resources: [
-      { type: 'article', label: 'Catmull Rom Spline', url: '#' },
-    ],
-  }, */
+    position: { x: 590, y: 500 },
+    resources: [{ type: 'article', label: 'Catmull Rom Spline', url: '#' }],
+  },
 
- /* 
-  // RIGHT COLUMN - Server Side, Physics (Advanced)
-  {
-    id: 'g-server-side',
-    title: 'Server Side',
-    description: 'Multiplayer connections, state synchronization, validation',
-    level: 'advanced',
-    color: COLORS.advanced,
-    position: { x: 520, y: 200 },
-    resources: [
-      { type: 'article', label: 'Networking Basics', url: '#' },
-    ],
-  },*/
+  // PHYSICS
   {
     id: 'g-game-physics',
     title: 'Game Physics',
     description: 'Gravity, collisions, forces - Simulate real-world physics',
     level: 'core',
     color: COLORS.core,
-    position: { x: 890, y: 500 },
+    position: { x: 890, y: 700 },
     resources: [
       { type: 'article', label: 'Game Physics', url: '#' },
       { type: 'article', label: 'Master Physics', url: '#' },
     ],
   },
 
-
- /* 
-  // RIGHT SIDE - Physics Details
+  // PHYSICS DETAILS
   {
     id: 'g-center-of-mass',
     title: 'Center of Mass',
     description: 'Average position weighted by mass - affects movement',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 240 },
-    resources: [
-      { type: 'article', label: 'Center of Mass', url: '#' },
-    ],
+    position: { x: 800, y: 240 },
+    resources: [{ type: 'article', label: 'Center of Mass', url: '#' }],
   },
   {
     id: 'g-moment-of-inertia',
@@ -345,10 +296,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Rotational inertia - resistance to rotation',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 280 },
-    resources: [
-      { type: 'article', label: 'Moment of Inertia', url: '#' },
-    ],
+    position: { x: 960, y: 240 },
+    resources: [{ type: 'article', label: 'Moment of Inertia', url: '#' }],
   },
   {
     id: 'g-acceleration',
@@ -356,10 +305,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Rate of change in velocity - F=ma',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 320 },
-    resources: [
-      { type: 'article', label: 'Acceleration in Games', url: '#' },
-    ],
+    position: { x: 800, y: 290 },
+    resources: [{ type: 'article', label: 'Acceleration in Games', url: '#' }],
   },
   {
     id: 'g-joints',
@@ -367,7 +314,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Connections between objects - hinges, springs',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 360 },
+    position: { x: 960, y: 290 },
     resources: [
       { type: 'official', label: 'Joints in Unity', url: '#' },
       { type: 'article', label: 'Character Rigging', url: '#' },
@@ -379,10 +326,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Bounciness - elasticity of collisions',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 400 },
-    resources: [
-      { type: 'article', label: 'Restitution Property', url: '#' },
-    ],
+    position: { x: 800, y: 340 },
+    resources: [{ type: 'article', label: 'Restitution Property', url: '#' }],
   },
   {
     id: 'g-force',
@@ -390,10 +335,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Influence causing movement - gravity, friction',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 440 },
-    resources: [
-      { type: 'article', label: 'Physics for Game Dev', url: '#' },
-    ],
+    position: { x: 960, y: 340 },
+    resources: [{ type: 'article', label: 'Physics for Game Dev', url: '#' }],
   },
   {
     id: 'g-buoyancy',
@@ -401,10 +344,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Upward force from fluid - swimming, floating',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 480 },
-    resources: [
-      { type: 'article', label: 'Buoyancy in Games', url: '#' },
-    ],
+    position: { x: 800, y: 390 },
+    resources: [{ type: 'article', label: 'Buoyancy in Games', url: '#' }],
   },
   {
     id: 'g-friction',
@@ -412,7 +353,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Resistance to movement - terrain-dependent',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 520 },
+    position: { x: 960, y: 390 },
     resources: [
       { type: 'article', label: 'Friction in Game Dev', url: '#' },
       { type: 'video', label: 'Friction Explained', url: '#' },
@@ -424,10 +365,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Rate of position change - speed and direction',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 560 },
-    resources: [
-      { type: 'article', label: 'Linear Velocity', url: '#' },
-    ],
+    position: { x: 800, y: 440 },
+    resources: [{ type: 'article', label: 'Linear Velocity', url: '#' }],
   },
   {
     id: 'g-dynamics',
@@ -435,10 +374,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Movement & interaction over time - kinematics, forces',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 600 },
-    resources: [
-      { type: 'article', label: 'Dynamics in Physics', url: '#' },
-    ],
+    position: { x: 960, y: 440 },
+    resources: [{ type: 'article', label: 'Dynamics in Physics', url: '#' }],
   },
   {
     id: 'g-collision-detection',
@@ -446,10 +383,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Broad phase, narrow phase, SAT, GJK algorithms',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 520, y: 640 },
-    resources: [
-      { type: 'article', label: 'Collision Detection', url: '#' },
-    ],
+    position: { x: 890, y: 790 },
+    resources: [{ type: 'article', label: 'Collision Detection', url: '#' }],
   },
   {
     id: 'g-ccd',
@@ -457,10 +392,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Continuous collision detection - prevent tunneling',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 570, y: 670 },
-    resources: [
-      { type: 'article', label: 'Continuous Collision', url: '#' },
-    ],
+    position: { x: 890, y: 840 },
+    resources: [{ type: 'article', label: 'Continuous Collision', url: '#' }],
   },
   {
     id: 'g-intersection',
@@ -468,21 +401,17 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Exact collision point determination',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 470, y: 670 },
-    resources: [
-      { type: 'article', label: 'Intersection Tests', url: '#' },
-    ],
+    position: { x: 700, y: 840 },
+    resources: [{ type: 'article', label: 'Intersection Tests', url: '#' }],
   },
   {
     id: 'g-convexity',
     title: 'Convexity',
     description: 'Convex vs concave shapes in collision',
-    level: 'white',
-    color: COLORS.white,
-    position: { x: 400, y: 640 },
-    resources: [
-      { type: 'article', label: 'Convexity in Games', url: '#' },
-    ],
+    level: 'advanced',
+    color: COLORS.advanced,
+    position: { x: 700, y: 890 },
+    resources: [{ type: 'article', label: 'Convexity in Games', url: '#' }],
   },
   {
     id: 'g-sat',
@@ -490,10 +419,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Separating Axis Theorem - polygon collision',
     level: 'white',
     color: COLORS.white,
-    position: { x: 330, y: 640 },
-    resources: [
-      { type: 'article', label: 'Separating Axis Theorem', url: '#' },
-    ],
+    position: { x: 500, y: 790 },
+    resources: [{ type: 'article', label: 'Separating Axis Theorem', url: '#' }],
   },
   {
     id: 'g-gjk',
@@ -501,10 +428,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Gilbert-Johnson-Keerthi - convex intersection',
     level: 'white',
     color: COLORS.white,
-    position: { x: 260, y: 640 },
-    resources: [
-      { type: 'article', label: 'GJK Algorithm', url: '#' },
-    ],
+    position: { x: 500, y: 840 },
+    resources: [{ type: 'article', label: 'GJK Algorithm', url: '#' }],
   },
   {
     id: 'g-epa',
@@ -512,10 +437,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Expanding Polytope - penetration depth',
     level: 'white',
     color: COLORS.white,
-    position: { x: 190, y: 640 },
-    resources: [
-      { type: 'article', label: 'EPA Algorithm', url: '#' },
-    ],
+    position: { x: 500, y: 890 },
+    resources: [{ type: 'article', label: 'EPA Algorithm', url: '#' }],
   },
   {
     id: 'g-convex',
@@ -523,10 +446,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Convex shape detection and handling',
     level: 'white',
     color: COLORS.white,
-    position: { x: 400, y: 680 },
-    resources: [
-      { type: 'article', label: 'Convex in Games', url: '#' },
-    ],
+    position: { x: 700, y: 990 },
+    resources: [{ type: 'article', label: 'Convex in Games', url: '#' }],
   },
   {
     id: 'g-concave',
@@ -534,10 +455,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Concave shape handling - more complex',
     level: 'white',
     color: COLORS.white,
-    position: { x: 330, y: 680 },
-    resources: [
-      { type: 'article', label: 'Concave Shapes', url: '#' },
-    ],
+    position: { x: 700, y: 1040 },
+    resources: [{ type: 'article', label: 'Concave Shapes', url: '#' }],
   },
   {
     id: 'g-convex-hull',
@@ -545,10 +464,8 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Smallest convex polygon - simplify collision',
     level: 'white',
     color: COLORS.white,
-    position: { x: 260, y: 680 },
-    resources: [
-      { type: 'article', label: 'Convex Hull', url: '#' },
-    ],
+    position: { x: 500, y: 990 },
+    resources: [{ type: 'article', label: 'Convex Hull', url: '#' }],
   },
   {
     id: 'g-convex-decomposition',
@@ -556,21 +473,18 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Break concave shapes into convex parts',
     level: 'white',
     color: COLORS.white,
-    position: { x: 190, y: 680 },
-    resources: [
-      { type: 'article', label: 'Convex Decomposition', url: '#' },
-    ],
-  }, */
+    position: { x: 500, y: 1040 },
+    resources: [{ type: 'article', label: 'Convex Decomposition', url: '#' }],
+  },
 
- /* 
-  // Far Right - Native Engines
+  // ENGINES
   {
     id: 'g-unity-3d',
     title: 'Unity 3D',
     description: 'Versatile cross-platform game engine',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 620, y: 370 },
+    position: { x: 20, y: 570 },
     resources: [
       { type: 'official', label: 'Unity Docs', url: '#' },
       { type: 'video', label: 'Unity in 100 Seconds', url: '#' },
@@ -582,7 +496,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'High-performance engine for AAA games',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 620, y: 410 },
+    position: { x: 20, y: 620 },
     resources: [
       { type: 'official', label: 'Unreal Docs', url: '#' },
       { type: 'video', label: 'Unreal in 100 Seconds', url: '#' },
@@ -594,7 +508,7 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'C++/Rust game development without engine',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 620, y: 450 },
+    position: { x: 20, y: 670 },
     resources: [
       { type: 'article', label: 'Game Dev with C++', url: '#' },
       { type: 'article', label: 'Building with Rust', url: '#' },
@@ -606,80 +520,56 @@ export const gameDevNodes: RoadmapNodeData[] = [
     description: 'Open-source, feature-rich game engine',
     level: 'advanced',
     color: COLORS.advanced,
-    position: { x: 1000, y: 490 },
+    position: { x: 20, y: 720 },
     resources: [
       { type: 'official', label: 'Godot Docs', url: '#' },
       { type: 'video', label: 'Godot Tutorial', url: '#' },
     ],
-  },*/
+  },
 ];
 
-export const gameDevEdges: RoadmapEdgeData[] = [
-  // Left side connections
-  { id: 'e1', source: 'g-linear-algebra', target: 'g-vector' },
-  { id: 'e2', source: 'g-linear-algebra', target: 'g-matrix' },
-  { id: 'e3', source: 'g-vector', target: 'g-linear-transformation' },
-  { id: 'e4', source: 'g-matrix', target: 'g-linear-transformation' },
-  { id: 'e5', source: 'g-linear-transformation', target: 'g-geometry' },
-  { id: 'e6', source: 'g-linear-transformation', target: 'g-affine-space' },
-  { id: 'e7', source: 'g-geometry', target: 'g-affine-transformation' },
-  { id: 'e8', source: 'g-affine-space', target: 'g-affine-transformation' },
-  { id: 'e9', source: 'g-affine-transformation', target: 'g-projection' },
-  { id: 'e10', source: 'g-affine-transformation', target: 'g-orientation' },
-  { id: 'e11', source: 'g-projection', target: 'g-perspective' },
-  { id: 'e12', source: 'g-orientation', target: 'g-quaternion' },
-  { id: 'e13', source: 'g-perspective', target: 'g-orthogonal' },
-  { id: 'e14', source: 'g-quaternion', target: 'g-euler-angle' },
-
-  // Center main path
+// EDGES
+const gameDevEdges: RoadmapEdgeData[] = [
   { id: 'e15', source: 'g-linear-algebra', target: 'g-game-mathematics' },
   { id: 'e16', source: 'g-game-mathematics', target: 'g-game-engine' },
   { id: 'e17', source: 'g-game-engine', target: 'g-programming-languages' },
   { id: 'e18', source: 'g-client-side-dev', target: 'g-game-mathematics' },
 
-  // Center curves
   { id: 'e19', source: 'g-game-mathematics', target: 'g-curve' },
-  { id: 'e20', source: 'g-curve', target: 'g-spline' },
-  { id: 'e21', source: 'g-curve', target: 'g-hermite' },
-  { id: 'e22', source: 'g-spline', target: 'g-bezier' },
-  { id: 'e23', source: 'g-hermite', target: 'g-catmull-rom' },
-
-  // Center to Physics
   { id: 'e24', source: 'g-game-mathematics', target: 'g-game-physics' },
-  { id: 'e25', source: 'g-curve', target: 'g-game-physics' },
 
-  // Right side Physics details
-  { id: 'e26', source: 'g-game-physics', target: 'g-center-of-mass' },
-  { id: 'e27', source: 'g-game-physics', target: 'g-moment-of-inertia' },
-  { id: 'e28', source: 'g-game-physics', target: 'g-acceleration' },
-  { id: 'e29', source: 'g-game-physics', target: 'g-joints' },
-  { id: 'e30', source: 'g-game-physics', target: 'g-restitution' },
-  { id: 'e31', source: 'g-game-physics', target: 'g-force' },
-  { id: 'e32', source: 'g-game-physics', target: 'g-buoyancy' },
-  { id: 'e33', source: 'g-game-physics', target: 'g-friction' },
   { id: 'e34', source: 'g-game-physics', target: 'g-linear-velocity' },
   { id: 'e35', source: 'g-game-physics', target: 'g-dynamics' },
+
+  // NOTE: you had a duplicate e35; changed to e36 so IDs are unique.
   { id: 'e36', source: 'g-game-physics', target: 'g-collision-detection' },
 
-  // Collision detection branches
-  { id: 'e37', source: 'g-collision-detection', target: 'g-ccd' },
-  { id: 'e38', source: 'g-collision-detection', target: 'g-intersection' },
-  { id: 'e39', source: 'g-intersection', target: 'g-convexity' },
+  { id: 'e38', source: 'g-ccd', target: 'g-intersection' },
+  { id: 'e39', source: 'g-ccd', target: 'g-convexity' },
   { id: 'e40', source: 'g-convexity', target: 'g-sat' },
-  { id: 'e41', source: 'g-convexity', target: 'g-gjk' },
   { id: 'e42', source: 'g-gjk', target: 'g-epa' },
-  { id: 'e43', source: 'g-sat', target: 'g-convex' },
-  { id: 'e44', source: 'g-gjk', target: 'g-convex' },
-  { id: 'e45', source: 'g-convex', target: 'g-concave' },
-  { id: 'e46', source: 'g-concave', target: 'g-convex-hull' },
-  { id: 'e47', source: 'g-convex-hull', target: 'g-convex-decomposition' },
+  { id: 'e46', source: 'g-concave', target: 'g-convex-decomposition' },
+  { id: 'e47', source: 'g-convex-hull', target: 'g-convex' },
 
-  // Engines
   { id: 'e48', source: 'g-game-engine', target: 'g-unity-3d' },
   { id: 'e49', source: 'g-game-engine', target: 'g-unreal-engine' },
   { id: 'e50', source: 'g-game-engine', target: 'g-native' },
   { id: 'e51', source: 'g-game-engine', target: 'g-godot' },
 
-  // Server side
-  { id: 'e52', source: 'g-server-side', target: 'g-game-physics' },
+  { id: 'e52', source: 'g-convexity', target: 'g-convex' },
+  { id: 'e53', source: 'g-programming-languages', target: 'g-rust-python' },
+  { id: 'e54', source: 'g-programming-languages', target: 'g-gdscript' },
+  { id: 'e55', source: 'g-programming-languages', target: 'g-c-cpp-csharp' },
+
+  // NOTE: you referenced g-server-side but there is no node with that id.
+  // Keep it removed for now to avoid an edge pointing to nothing.
+  // { id: 'e52', source: 'g-server-side', target: 'g-game-physics' },
 ];
+
+export const gameDevRoadmap: RoadmapData = {
+  id: 'game-dev',
+  title: 'Game Developer',
+  subtitle: 'Roadmap to becoming a Game Developer in 2025',
+  nodes: gameDevNodes,
+  edges: gameDevEdges,
+};

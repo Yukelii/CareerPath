@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
-import { RoadmapNodeData, NodeStatus } from '../types/gameDevRoadmap';
+import { RoadmapNodeData, NodeStatus } from '../types/roadmap';
 import './RoadmapPanel.css';
 
 interface RoadmapPanelProps {
   node: RoadmapNodeData | null;
   isOpen: boolean;
   onClose: () => void;
+  currentStatus: NodeStatus['status'];
   onStatusChange: (nodeId: string, status: NodeStatus['status']) => void;
 }
 
@@ -14,17 +15,16 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
   node,
   isOpen,
   onClose,
+  currentStatus,
   onStatusChange,
 }) => {
-  const [status, setStatus] = useState<NodeStatus['status']>('pending');
+  const [status, setStatus] = useState<NodeStatus['status']>(currentStatus);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Update local status when currentStatus changes
   useEffect(() => {
-    if (node) {
-      // Reset status when node changes
-      setStatus('pending');
-    }
-  }, [node?.id]);
+    setStatus(currentStatus);
+  }, [currentStatus]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -55,10 +55,10 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
   if (!node) return null;
 
   const statusColors: Record<NodeStatus['status'], string> = {
-    done: '#22c55e',        // green
-    'in-progress': '#f59e0b', // amber
-    skip: '#ef4444',        // red
-    pending: '#6b7280',     // gray
+    done: '#22c55e',
+    'in-progress': '#f59e0b',
+    skip: '#ef4444',
+    pending: '#6b7280',
   };
 
   return (
@@ -86,7 +86,12 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
             {node.resources.map((resource, idx) => (
               <li key={idx} className="resource-item">
                 <span className="resource-type">{resource.type}</span>
-                <a href={resource.url || '#'} target="_blank" rel="noopener noreferrer" className="resource-link">
+                <a
+                  href={resource.url || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="resource-link"
+                >
                   {resource.label}
                 </a>
               </li>

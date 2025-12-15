@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/roadmap/:careerId" element={<RoadmapPage />} />
+        <Route path="/roadmap/:roadmapId" element={<RoadmapPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
