@@ -1,0 +1,55 @@
+/* Scope everything to Profile page only */
+.profile-section {
+  color: #9ca3af; /* base gray */
+}
+
+/* Headings slightly brighter */
+.profile-section .account-section-heading,
+.profile-section .account-subheading {
+  color: #e5e7eb;
+}
+
+/* Labels and values */
+.profile-section .account-row-label {
+  color: #e5e7eb;
+}
+
+.profile-section .account-row-value {
+  color: #9ca3af;
+}
+
+/* Links */
+.profile-section .account-link {
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.profile-section .account-link:hover {
+  color: #d1d5db;
+  text-decoration: underline;
+}
+
+/* Optional: button tweaks (still scoped) */
+.profile-section .account-row-button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.profile-section .account-row-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+/* Make the row separator lines gray */
+.profile-section .account-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* If you have a divider line above "System" */
+.profile-section .account-subheading {
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Optional: if there is a general divider element */
+.profile-section .account-divider {
+  background: rgba(255, 255, 255, 0.18);
+}

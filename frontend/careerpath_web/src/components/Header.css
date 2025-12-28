@@ -1,32 +1,74 @@
-.header-navbar {
-  background-color: #7b7f72 !important; /* top bar color */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-  padding: 1rem 2rem;
+/* Shell around icon + search so width is fixed */
+.header-search-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.header-navbar .navbar-brand {
-  color: #ffffff !important;
-  font-size: 1.8rem;
-  font-weight: 700;
+/* Panel with input + dropdown */
+.header-search-panel {
+  position: relative;
+  width: 260px;      /* fixed width */
 }
 
-.header-navbar .btn-link,
-.header-navbar .dropdown-toggle {
-  color: #ffffff !important;
+/* Input styling */
+.header-search-input-group {
+  width: 100%;
 }
 
-.header-navbar .dropdown-menu {
-  background-color: #666a60;
-  color: #ffffff;
-  border-radius: 16px;
-  padding: 0.5rem 0;
-}
-
-.header-navbar .dropdown-item {
-  color: #ffffff;
-  padding: 0.6rem 1.25rem;
-}
-
-.header-navbar .dropdown-item:hover {
+.header-search-input-group .form-control {
   background-color: #55594f;
+  border: none;
+  color: #ffffff;
+}
+
+.header-search-input-group .form-control::placeholder {
+  color: #cfd2c9;
+}
+
+/* Dropdown under the input */
+.header-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: #f5f5f5;
+  color: #111827;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  z-index: 1050;
+}
+
+/* Top row with current query */
+.header-search-current {
+  padding: 8px 12px;
+  background-color: #e5e7eb;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #d1d5db;
+}
+
+/* Suggestions list */
+.header-search-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.header-search-item {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.header-search-item:hover {
+  background-color: #e5e7eb;
+}
+
+.header-search-empty {
+  color: #6b7280;
 }

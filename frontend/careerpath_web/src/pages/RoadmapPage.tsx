@@ -1,80 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { Header } from '../components/Header';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { RoadmapCanvas } from '../components/RoadmapCanvas';
 import { RoadmapPanel } from '../components/RoadmapPanel';
-import { RoadmapNodeData, NodeStatus } from '../types/roadmap';
+import type { NodeStatus, RoadmapNodeData } from '../types/roadmap';
 import { getRoadmapBySlug } from '../data/roadmaps/roadmapRegistry';
+import { defaultProgressRepository } from '../data/repositories/progressRepository';
 import './RoadmapPage.css';
 
 export const RoadmapPage: React.FC = () => {
-  const { roadmapId } = useParams<{ roadmapId: string }>();
+  const { roadmapId } = useParams();
 
-  // Get roadmap data from registry
+  // Get roadmap data from registry (frontend-only)
   const roadmap = roadmapId ? getRoadmapBySlug(roadmapId) : undefined;
 
-  // Local state
   const [selectedNode, setSelectedNode] = useState<RoadmapNodeData | null>(null);
   const [nodeStatuses, setNodeStatuses] = useState<Record<string, NodeStatus['status']>>({});
+  const [loading, setLoading] = useState(true);
 
-  // NEW: hydration flag (prevents overwriting saved progress on first render)
-  const [hydrated, setHydrated] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
-  // Load progress from localStorage when roadmapId changes
   useEffect(() => {
     if (!roadmapId) return;
 
-    setHydrated(false);     // important when switching roadmaps
-    setNodeStatuses({});    // prevents showing previous roadmap’s statuses briefly
+    setLoading(true);
+    setNodeStatuses({});
 
-    const storageKey = `careerpath:progress:${roadmapId}`;
-    const savedProgress = localStorage.getItem(storageKey);
-
-    if (savedProgress) {
+    (async () => {
       try {
-        const parsed = JSON.parse(savedProgress);
-        setNodeStatuses(parsed);
+        const statuses = await defaultProgressRepository.fetchNodeStatuses(roadmapId);
+        setNodeStatuses(statuses);
       } catch (error) {
-        console.error('Failed to parse saved progress:', error);
+        console.error('Failed to load progress:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-
-    setHydrated(true);
+    })();
   }, [roadmapId]);
 
-  // Save progress to localStorage whenever it changes (ONLY after hydration)
   useEffect(() => {
     if (!roadmapId) return;
-    if (!hydrated) return;
 
-    const storageKey = `careerpath:progress:${roadmapId}`;
-    localStorage.setItem(storageKey, JSON.stringify(nodeStatuses));
-  }, [nodeStatuses, roadmapId, hydrated]);
+    (async () => {
+      try {
+        const isBookmarked = await defaultProgressRepository.checkBookmark(roadmapId);
+        setBookmarked(isBookmarked);
+      } catch (error) {
+        console.error('Failed to check bookmark:', error);
+      }
+    })();
+  }, [roadmapId]);
 
-  // Handle node click
-  const handleNodeClick = (node: RoadmapNodeData) => {
-    setSelectedNode(node);
+  const handleNodeClick = (node: RoadmapNodeData) => setSelectedNode(node);
+
+  const handlePanelClose = () => setSelectedNode(null);
+
+  const handleStatusChange = async (nodeId: string, status: NodeStatus['status']) => {
+    if (!roadmapId) return;
+
+    try {
+      await defaultProgressRepository.updateNodeStatus(roadmapId, nodeId, status);
+      setNodeStatuses((prev) => ({ ...prev, [nodeId]: status }));
+    } catch (error) {
+      console.error('Failed to update status:', error);
+    }
   };
 
-  // Handle panel close
-  const handlePanelClose = () => {
-    setSelectedNode(null);
+  const handleBookmarkToggle = async () => {
+    if (!roadmapId) return;
+
+    setBookmarkLoading(true);
+    try {
+      const newBookmarked = await defaultProgressRepository.toggleBookmark(roadmapId);
+      setBookmarked(newBookmarked);
+    } catch (error) {
+      console.error('Failed to toggle bookmark:', error);
+    } finally {
+      setBookmarkLoading(false);
+    }
   };
 
-  // Handle status change
-  const handleStatusChange = (nodeId: string, status: NodeStatus['status']) => {
-    setNodeStatuses((prev) => ({
-      ...prev,
-      [nodeId]: status,
-    }));
-  };
+  if (!roadmap) return <Navigate to="/" replace />;
 
-  // If roadmap slug is invalid, redirect to home
-  if (!roadmap) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Calculate progress
   const total = roadmap.nodes.length;
   const done = Object.values(nodeStatuses).filter((s) => s === 'done').length;
   const skipped = Object.values(nodeStatuses).filter((s) => s === 'skip').length;
@@ -83,29 +90,34 @@ export const RoadmapPage: React.FC = () => {
 
   return (
     <div className="roadmap-page-wrapper">
-      <Header userName="Zaidy" userImage="https://via.placeholder.com/40" />
-
-      {/* Blur overlay when panel is open */}
       {selectedNode && <div className="roadmap-blur-overlay" onClick={handlePanelClose} />}
 
       <div className={`roadmap-page-container ${selectedNode ? 'blurred' : ''}`}>
         <div className="roadmap-canvas-wrapper">
-          <RoadmapCanvas
-            title={roadmap.title}
-            subtitle={roadmap.subtitle}
-            nodes={roadmap.nodes}
-            edges={roadmap.edges}
-            nodeStatuses={nodeStatuses}
-            done={done}
-            total={total}
-            pending={pending}
-            percent={percent}
-            onNodeClick={handleNodeClick}
-          />
+          {loading ? (
+            <div style={{ padding: '2rem', textAlign: 'center' }}>Loading progress…</div>
+          ) : (
+            <RoadmapCanvas
+              title={roadmap.title}
+              subtitle={roadmap.subtitle}
+              nodes={roadmap.nodes}
+              edges={roadmap.edges}
+              groups={roadmap.groups}
+              canvasTexts={roadmap.canvasTexts}
+              nodeStatuses={nodeStatuses}
+              done={done}
+              total={total}
+              pending={pending}
+              percent={percent}
+              onNodeClick={handleNodeClick}
+              bookmarked={bookmarked}
+              onBookmarkToggle={handleBookmarkToggle}
+              bookmarkLoading={bookmarkLoading}
+            />
+          )}
         </div>
       </div>
 
-      {/* Right slide panel */}
       <RoadmapPanel
         node={selectedNode}
         isOpen={!!selectedNode}

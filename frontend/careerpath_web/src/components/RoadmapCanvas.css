@@ -8,6 +8,7 @@
 .roadmap-node {
   transition: all 0.2s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+
 }
 
 .roadmap-node:hover {
@@ -25,3 +26,19 @@
 .roadmap-edge {
   transition: stroke 0.2s ease;
 }
+
+
+.roadmap-canvas {
+  display: block;
+  user-select: none;
+}
+
+.roadmap-edge {
+  vector-effect: non-scaling-stroke;
+}
+
+
+
+
+
+

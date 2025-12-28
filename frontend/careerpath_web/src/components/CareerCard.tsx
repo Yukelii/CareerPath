@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bookmark } from 'lucide-react';
+import React from 'react';
+import { Star } from 'lucide-react';
 import './CareerCard.css';
 
 interface CareerCardProps {
@@ -18,26 +18,29 @@ export const CareerCard: React.FC<CareerCardProps> = ({
   onClick,
 }) => {
   return (
-    <div 
+    <div
       className={`career-card ${isBookmarked ? 'bookmarked' : ''}`}
       onClick={() => onClick?.(id)}
     >
-      {/* Bookmark Icon - Top Right */}
+      {}
       <button
         className="bookmark-btn"
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           onBookmarkToggle?.(id);
         }}
+        aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+        title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
       >
-        <Bookmark 
-          size={24} 
+        <Star
+          size={24}
           fill={isBookmarked ? 'currentColor' : 'none'}
           color={isBookmarked ? '#2d5f6e' : '#666'}
         />
       </button>
 
-      {/* Career Title - Centered */}
+      {}
       <div className="career-card-content">
         <h5 className="career-card-title">{title}</h5>
       </div>

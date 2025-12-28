@@ -1,198 +1,378 @@
 import React, { useMemo, useState } from 'react';
-import { RoadmapNodeData, RoadmapEdgeData, NodeStatus } from '../types/roadmap';
+import {
+  RoadmapNodeData,
+  RoadmapEdgeData,
+  NodeStatus,
+  RoadmapGroupData,
+  CanvasTextData,
+} from '../types/roadmap';
 import './RoadmapCanvas.css';
 
 interface RoadmapCanvasProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   nodes: RoadmapNodeData[];
   edges: RoadmapEdgeData[];
-  nodeStatuses: Record<string, NodeStatus['status']>;
-  done: number;
-  total: number;
-  pending: number;
-  percent: number;
-  onNodeClick: (node: RoadmapNodeData) => void;
-
-  // NEW (optional): allow taller/smaller canvases per-career if you want
+  groups?: RoadmapGroupData[];
+  canvasTexts?: CanvasTextData[];
+  nodeStatuses?: Record<string, NodeStatus['status']>;
+  done?: number;
+  total?: number;
+  pending?: number;
+  percent?: number;
+  onNodeClick?: (node: RoadmapNodeData) => void;
   canvasHeight?: number;
-
-  // NEW (optional): if set, SVG stays inside a scrollable area (prevents super tall pages)
-  maxViewportHeight?: number; // e.g. 700
+  maxViewportHeight?: number;
+  bookmarked?: boolean;
+  onBookmarkToggle?: () => void;
+  bookmarkLoading?: boolean;
 }
 
 type HandlePosition = 'left' | 'right' | 'top' | 'bottom';
 
 export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
   title,
-  subtitle,
+  subtitle = '',
   nodes,
   edges,
-  nodeStatuses,
-  done,
-  total,
-  pending,
-  percent,
-  onNodeClick,
+  groups = [],
+  canvasTexts = [],
+  nodeStatuses = {},
+  done = 0,
+  total = 0,
+  pending = 0,
+  percent = 0,
+  onNodeClick = () => {},
   canvasHeight: canvasHeightProp,
   maxViewportHeight,
+  bookmarked = false,
+  onBookmarkToggle = () => {},
+  bookmarkLoading = false,
 }) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [bookmarked, setBookmarked] = useState(false);
 
-  // CANVAS DIMENSIONS
   const canvasWidth = 1200;
-
-  // match your node size
-  const NODE_WIDTH = 150;
-  const NODE_HEIGHT = 40;
-
-  // extra space at the bottom so the last node isn't glued to the edge
   const EXTRA_PADDING = 200;
 
-  // Compute required height from your node positions
+  const NODE_SIZES = {
+    sm: { w: 110, h: 30 },
+    md: { w: 150, h: 40 },
+    lg: { w: 190, h: 52 },
+  } as const;
+
+  const getNodeSize = (node: RoadmapNodeData) => {
+    const key = node.size ?? 'md';
+    return NODE_SIZES[key];
+  };
+
   const computedCanvasHeight = useMemo(() => {
-    if (!nodes?.length) return 600; // fallback if empty
-    const maxY = Math.max(...nodes.map((n) => n.position.y));
-    return maxY + NODE_HEIGHT + EXTRA_PADDING;
+    if (!nodes?.length) return 600;
+    const maxBottom = Math.max(...nodes.map((n) => n.position.y + getNodeSize(n).h));
+    return maxBottom + EXTRA_PADDING;
   }, [nodes]);
 
-  // Use override if provided; otherwise use computed height
   const canvasHeight = canvasHeightProp ?? computedCanvasHeight;
 
-  // ----- NEW: helpers for angled edges -----
+  const sortedNodes = useMemo(() => {
+    // Deterministic “first”: top-to-bottom then left-to-right
+    return [...nodes].sort((a, b) => {
+      const dy = a.position.y - b.position.y;
+      if (dy !== 0) return dy;
+      const dx = a.position.x - b.position.x;
+      if (dx !== 0) return dx;
+      return a.id.localeCompare(b.id);
+    });
+  }, [nodes]);
+
   const getAnchorPoint = (node: RoadmapNodeData, pos: HandlePosition) => {
     const { x, y } = node.position;
+    const { w, h } = getNodeSize(node);
+
     switch (pos) {
       case 'left':
-        return { x: x, y: y + NODE_HEIGHT / 2 };
+        return { x, y: y + h / 2 };
       case 'right':
-        return { x: x + NODE_WIDTH, y: y + NODE_HEIGHT / 2 };
+        return { x: x + w, y: y + h / 2 };
       case 'top':
-        return { x: x + NODE_WIDTH / 2, y: y };
+        return { x: x + w / 2, y };
       case 'bottom':
       default:
-        return { x: x + NODE_WIDTH / 2, y: y + NODE_HEIGHT };
+        return { x: x + w / 2, y: y + h };
     }
   };
 
-  // Decide which side to connect to if node.sourcePosition/targetPosition is not provided.
   const autoPort = (from: RoadmapNodeData, to: RoadmapNodeData): HandlePosition => {
     const dx = to.position.x - from.position.x;
     const dy = to.position.y - from.position.y;
-
-    // If more horizontal separation: connect left/right; else connect top/bottom
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      return dx >= 0 ? 'right' : 'left';
-    }
+    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 'right' : 'left';
     return dy >= 0 ? 'bottom' : 'top';
   };
 
-  // Render edges (NOW: path instead of line)
-  const renderEdges = () => {
-    return edges.map((edge) => {
+  const renderGroups = () =>
+    groups.map((g) => {
+      const rx = g.rx ?? 10;
+      const stroke = g.stroke ?? '#000';
+      const strokeWidth = g.strokeWidth ?? 1;
+
+      const fillRaw = g.fill ?? 'transparent';
+      const fill = fillRaw === 'solid' ? 'rgba(0,0,0,0.035)' : fillRaw;
+
+      const title = g.title?.trim();
+      const titleFontSize = g.titleFontSize ?? 14;
+      const titleColor = g.titleColor ?? '#333';
+      const titlePosition = g.titlePosition ?? 'top';
+      const titleAlign = g.titleAlign ?? 'middle';
+
+      if (g.bounds) {
+        const { x, y, width, height } = g.bounds;
+
+        const titleX =
+          titleAlign === 'start'
+            ? x + 10
+            : titleAlign === 'end'
+            ? x + width - 10
+            : x + width / 2;
+
+        const titleY =
+          titlePosition === 'bottom'
+            ? y + height - (titleFontSize / 2 + 8)
+            : y + titleFontSize / 2 + 8;
+
+        return (
+          <g key={g.id} style={{ pointerEvents: 'none' }}>
+            <rect
+              x={x}
+              y={y}
+              width={width}
+              height={height}
+              rx={rx}
+              fill={fill}
+              stroke={stroke}
+              strokeWidth={strokeWidth}
+            />
+            {title && (
+              <text
+                x={titleX}
+                y={titleY}
+                fontSize={titleFontSize}
+                fontWeight={700}
+                fill={titleColor}
+                textAnchor={titleAlign}
+                dominantBaseline="middle"
+              >
+                {title}
+              </text>
+            )}
+          </g>
+        );
+      }
+
+      const groupNodes = g.nodeIds
+        .map((id) => nodes.find((n) => n.id === id))
+        .filter(Boolean) as RoadmapNodeData[];
+
+      if (!groupNodes.length) return null;
+
+      const pad = g.padding ?? 12;
+
+      const minX = Math.min(...groupNodes.map((n) => n.position.x));
+      const minY = Math.min(...groupNodes.map((n) => n.position.y));
+      const maxX = Math.max(...groupNodes.map((n) => n.position.x + getNodeSize(n).w));
+      const maxY = Math.max(...groupNodes.map((n) => n.position.y + getNodeSize(n).h));
+
+      const x = minX - pad;
+      const y = minY - pad;
+      const width = maxX - minX + pad * 2;
+      const height = maxY - minY + pad * 2;
+
+      const titleX =
+        titleAlign === 'start'
+          ? x + 10
+          : titleAlign === 'end'
+          ? x + width - 10
+          : x + width / 2;
+
+      const titleY =
+        titlePosition === 'bottom'
+          ? y + height - (titleFontSize / 2 + 8)
+          : y + titleFontSize / 2 + 8;
+
+      return (
+        <g key={g.id} style={{ pointerEvents: 'none' }}>
+          <rect
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            rx={rx}
+            fill={fill}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+          />
+          {title && (
+            <text
+              x={titleX}
+              y={titleY}
+              fontSize={titleFontSize}
+              fontWeight={700}
+              fill={titleColor}
+              textAnchor={titleAlign}
+              dominantBaseline="middle"
+            >
+              {title}
+            </text>
+          )}
+        </g>
+      );
+    });
+
+  const renderCanvasTexts = () =>
+    canvasTexts.map((t) => (
+      <text
+        key={t.id}
+        x={t.position.x}
+        y={t.position.y}
+        fontSize={t.fontSize ?? 12}
+        fontWeight={t.fontWeight ?? 400}
+        fill={t.color ?? '#333'}
+        textAnchor={t.textAnchor ?? 'start'}
+        style={{ pointerEvents: 'none' }}
+      >
+        {t.text}
+      </text>
+    ));
+
+  const renderEdges = () =>
+    edges.map((edge, idx) => {
       const sourceNode = nodes.find((n) => n.id === edge.source);
       const targetNode = nodes.find((n) => n.id === edge.target);
-
       if (!sourceNode || !targetNode) return null;
 
-      // If you added these optional fields in your RoadmapNodeData, they’ll be used.
-      // Otherwise it falls back to auto selection.
-      const sourcePos = (sourceNode as any).sourcePosition as HandlePosition | undefined;
-      const targetPos = (targetNode as any).targetPosition as HandlePosition | undefined;
+      const sPort =
+        edge.sourcePosition ?? sourceNode.sourcePosition ?? autoPort(sourceNode, targetNode);
 
-      const sPort: HandlePosition = sourcePos ?? autoPort(sourceNode, targetNode);
-      const tPort: HandlePosition = targetPos ?? autoPort(targetNode, sourceNode);
+      const tPort =
+        edge.targetPosition ?? targetNode.targetPosition ?? autoPort(targetNode, sourceNode);
 
       const a = getAnchorPoint(sourceNode, sPort);
       const b = getAnchorPoint(targetNode, tPort);
 
-      // If you extended RoadmapEdgeData with edge.type, this will respect it.
-      // Default is "elbow" so you get angled lines like your reference.
-      const edgeType = (edge as any).type as ('straight' | 'elbow') | undefined;
+      const edgeType = edge.type as 'straight' | 'elbow' | undefined;
+
+      const edgeKey = `${edge.id}-${edge.source}-${edge.target}-${idx}`;
 
       if (edgeType === 'straight') {
-        const d = `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
         return (
           <path
-            key={edge.id}
-            d={d}
+            key={edgeKey}
+            d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`}
             fill="none"
-            stroke="rgba(0, 0, 0, 0.4)"
-            strokeWidth="2"
+            stroke="rgba(0,0,0,0.4)"
+            strokeWidth={2}
             className="roadmap-edge"
+            style={{ pointerEvents: 'none' }}
           />
         );
       }
 
-      // Elbow path: go horizontally to a midX, then vertically, then horizontally into target.
       const midX = (a.x + b.x) / 2;
-      const d = `M ${a.x} ${a.y} L ${midX} ${a.y} L ${midX} ${b.y} L ${b.x} ${b.y}`;
-
       return (
         <path
-          key={edge.id}
-          d={d}
+          key={edgeKey}
+          d={`M ${a.x} ${a.y} L ${midX} ${a.y} L ${midX} ${b.y} L ${b.x} ${b.y}`}
           fill="none"
-          stroke="rgba(0, 0, 0, 0.4)"
-          strokeWidth="2"
+          stroke="rgba(0,0,0,0.4)"
+          strokeWidth={2}
           className="roadmap-edge"
+          style={{ pointerEvents: 'none' }}
         />
       );
     });
-  };
 
-  // Render nodes
-  const renderNodes = () => {
-    return nodes.map((node) => (
-      <g key={node.id}>
-        <rect
-          x={node.position.x}
-          y={node.position.y}
-          width={NODE_WIDTH}
-          height={NODE_HEIGHT}
-          rx="8"
-          fill={node.color}
-          stroke={hoveredNode === node.id ? '#333' : 'rgba(0,0,0,0.1)'}
-          strokeWidth={hoveredNode === node.id ? '2' : '1'}
-          className="roadmap-node"
-          onClick={() => onNodeClick(node)}
-          onMouseEnter={() => setHoveredNode(node.id)}
-          onMouseLeave={() => setHoveredNode(null)}
-          style={{ cursor: 'pointer' }}
-        />
-        <text
-          x={node.position.x + NODE_WIDTH / 2}
-          y={node.position.y + NODE_HEIGHT / 2 + 2}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          className="roadmap-node-text"
-          // Keep pointerEvents none so rect handles click/hover
-          style={{ cursor: 'pointer', pointerEvents: 'none' }}
-        >
-          {node.title}
-        </text>
+  const renderNodes = () =>
+    nodes.map((node) => {
+      const { w, h } = getNodeSize(node);
 
-        {/* Optional: tiny status dot (uses your nodeStatuses but does not change behavior) */}
-        {nodeStatuses?.[node.id] && (
-          <circle
-            cx={node.position.x + NODE_WIDTH - 10}
-            cy={node.position.y + 10}
-            r={4}
-            fill={
-              nodeStatuses[node.id] === 'done'
-                ? '#2e7d32'
-                : nodeStatuses[node.id] === 'in-progress'
+      return (
+        <g key={node.id}>
+          <rect
+            x={node.position.x}
+            y={node.position.y}
+            width={w}
+            height={h}
+            rx={8}
+            fill={node.color}
+            stroke={hoveredNode === node.id ? '#333' : 'rgba(0,0,0,0.1)'}
+            strokeWidth={hoveredNode === node.id ? 2 : 1}
+            className="roadmap-node"
+            onClick={() => onNodeClick(node)}
+            onMouseEnter={() => setHoveredNode(node.id)}
+            onMouseLeave={() => setHoveredNode(null)}
+            style={{ cursor: 'pointer' }}
+          />
+
+          <foreignObject
+            x={node.position.x + 3}
+            y={node.position.y + 3}
+            width={w - 6}
+            height={h - 6}
+            style={{ pointerEvents: 'none' }}
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                fontSize: 12,
+                wordWrap: 'break-word',
+                overflow: 'hidden',
+                pointerEvents: 'none',
+              }}
+            >
+              {node.title}
+            </div>
+          </foreignObject>
+
+          {nodeStatuses[node.id] && (
+            <circle
+              cx={node.position.x + w - 10}
+              cy={node.position.y + 10}
+              r={4}
+              fill={
+                nodeStatuses[node.id] === 'done'
+                  ? '#2e7d32'
+                  : nodeStatuses[node.id] === 'in-progress'
                   ? '#f9a825'
                   : nodeStatuses[node.id] === 'skip'
-                    ? '#757575'
-                    : '#bdbdbd'
-            }
-            opacity={0.9}
-          />
-        )}
-      </g>
-    ));
+                  ? '#757575'
+                  : '#bdbdbd'
+              }
+              opacity={0.9}
+              style={{ pointerEvents: 'none' }}
+            />
+          )}
+        </g>
+      );
+    });
+
+  const handleBookmarkToggle = async () => {
+    onBookmarkToggle();
+  };
+
+  const handleTrackProgress = () => {
+    if (!sortedNodes.length) return;
+
+    // unfinished = not done and not skip; undefined counts as unfinished
+    const firstUnfinished =
+      sortedNodes.find((n) => {
+        const s = nodeStatuses[n.id]; // may be undefined
+        return s !== 'done' && s !== 'skip';
+      }) ?? sortedNodes[0];
+
+    onNodeClick(firstUnfinished);
   };
 
   const svg = (
@@ -203,14 +383,26 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
       className="roadmap-canvas"
       style={{ border: '1px solid #ccc', background: '#f9f9f9' }}
     >
+      <text
+        x={canvasWidth / 2}
+        y={40}
+        textAnchor="middle"
+        fontSize={24}
+        fontWeight="bold"
+        fill="#333"
+      >
+        {title}
+      </text>
+
+      {renderGroups()}
       {renderEdges()}
       {renderNodes()}
+      {renderCanvasTexts()}
     </svg>
   );
 
   return (
     <div>
-      {/* HEADER */}
       <div
         style={{
           background: '#fff',
@@ -220,7 +412,6 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
           marginBottom: 12,
         }}
       >
-        {/* Top row: breadcrumb + bookmark */}
         <div
           style={{
             display: 'flex',
@@ -232,31 +423,36 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
           <div>
             <div style={{ fontSize: 12, color: '#7a7a7a' }}>All Roadmaps</div>
             <div style={{ fontSize: 34, fontWeight: 700, marginTop: 6 }}>{title}</div>
-            <div style={{ fontSize: 13, color: '#777', marginTop: 6 }}>{subtitle}</div>
+            {subtitle && (
+              <div style={{ fontSize: 13, color: '#777', marginTop: 6 }}>{subtitle}</div>
+            )}
           </div>
 
           <button
-            onClick={() => setBookmarked((b) => !b)}
+            onClick={handleBookmarkToggle}
+            disabled={bookmarkLoading}
             aria-label="Bookmark roadmap"
-            title="Bookmark roadmap"
+            title={bookmarked ? 'Remove bookmark' : 'Bookmark roadmap'}
             style={{
               width: 36,
               height: 36,
               borderRadius: 10,
-              border: '1px solid #e5e5e5',
-              background: '#fff',
-              cursor: 'pointer',
+              border: bookmarked ? '1px solid #f9a825' : '1px solid #e5e5e5',
+              background: bookmarked ? 'rgba(249, 168, 37, 0.1)' : '#fff',
+              cursor: bookmarkLoading ? 'not-allowed' : 'pointer',
               display: 'grid',
               placeItems: 'center',
               fontSize: 18,
               lineHeight: 1,
+              opacity: bookmarkLoading ? 0.6 : 1,
+              transition: 'all 200ms ease',
             }}
+            type="button"
           >
             {bookmarked ? '★' : '☆'}
           </button>
         </div>
 
-        {/* Bottom row: progress + track progress */}
         <div
           style={{
             display: 'flex',
@@ -296,13 +492,15 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
               background: 'transparent',
               cursor: 'pointer',
             }}
+            type="button"
+            onClick={handleTrackProgress}
+            disabled={!sortedNodes.length}
           >
             Track Progress
           </button>
         </div>
       </div>
 
-      {/* SVG CANVAS */}
       {maxViewportHeight ? (
         <div style={{ maxHeight: maxViewportHeight, overflowY: 'auto', overflowX: 'auto' }}>
           {svg}
@@ -313,3 +511,5 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
     </div>
   );
 };
+
+export default RoadmapCanvas;

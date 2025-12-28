@@ -1,0 +1,56 @@
+.account-layout {
+  display: flex;
+  min-height: calc(100vh - 72px); /* adjust to your header height */
+  background: #24261f !important;
+}
+
+
+.account-sidebar {
+  width: 220px;
+  background-color: #666a60;
+  display: flex;
+  flex-direction: column;
+}
+
+.account-nav {
+  margin-top: 1.5rem;   
+  margin-bottom: 0;     
+}
+
+
+/* Base link style */
+.account-link {
+  padding: 0.8rem 1.5rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.account-link-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;         /* change this to control spacing */
+}
+
+/* Active & hover states (NavLink adds .active) */
+.account-link:hover,
+.account-link.active {
+  background-color: #55594f;
+  color: #ffffff;
+}
+
+/* Icon color */
+.account-link-icon {
+  color: #c4f1c4;
+}
+
+/* Text span (in case you want extra control later) */
+.account-link-text {
+  font-weight: 500;
+}
+ 
+/* Right-side content */
+.account-content {
+  flex: 1;
+  padding: 2rem;
+}

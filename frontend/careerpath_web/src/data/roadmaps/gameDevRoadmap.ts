@@ -510,7 +510,7 @@ const gameDevNodes: RoadmapNodeData[] = [
     color: COLORS.advanced,
     position: { x: 20, y: 670 },
     resources: [
-      { type: 'article', label: 'Game Dev witssh C++', url: '#' },
+      { type: 'article', label: 'Game Dev with C++', url: '#' },
       { type: 'article', label: 'Building with Rust', url: '#' },
     ],
   },

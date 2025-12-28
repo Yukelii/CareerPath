@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CareerCard } from './CareerCard';
 import './RoadmapSection.css';
 
@@ -10,24 +10,20 @@ interface Career {
 interface RoadmapSectionProps {
   careers: Career[];
   onCardClick: (careerId: string) => void;
+
+  // NEW: controlled bookmark state (from HomePage, backed by API)
+  isBookmarkedMap?: Record<string, boolean>;
+  onBookmarkToggle?: (careerId: string) => void;
+  bookmarksLoading?: boolean;
 }
 
 export const RoadmapSection: React.FC<RoadmapSectionProps> = ({
   careers,
   onCardClick,
+  isBookmarkedMap = {},
+  onBookmarkToggle,
+  bookmarksLoading = false,
 }) => {
-  const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
-
-  const handleBookmarkToggle = (id: string) => {
-    const newBookmarked = new Set(bookmarked);
-    if (newBookmarked.has(id)) {
-      newBookmarked.delete(id);
-    } else {
-      newBookmarked.add(id);
-    }
-    setBookmarked(newBookmarked);
-  };
-
   return (
     <div className="roadmap-page">
       <div className="roadmap-section">
@@ -45,8 +41,11 @@ export const RoadmapSection: React.FC<RoadmapSectionProps> = ({
               key={career.id}
               id={career.id}
               title={career.title}
-              isBookmarked={bookmarked.has(career.id)}
-              onBookmarkToggle={handleBookmarkToggle}
+              isBookmarked={!!isBookmarkedMap[career.id]}
+              onBookmarkToggle={(id) => {
+                if (bookmarksLoading) return;
+                onBookmarkToggle?.(id);
+              }}
               onClick={onCardClick}
             />
           ))}

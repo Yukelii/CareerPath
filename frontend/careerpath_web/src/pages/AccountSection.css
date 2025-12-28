@@ -1,0 +1,100 @@
+.account-section {
+  max-width: 900px;
+  margin: 1.5rem 2rem;
+  color: #374151; /* base gray text */
+}
+
+.account-section-heading,
+.account-subheading {
+  color: #111827; /* darker headings */
+  font-weight: 600;
+}
+
+.account-section-heading {
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+}
+
+.account-subheading {
+  font-size: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+.account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.account-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.account-row-left--avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.account-avatar-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #111827;
+}
+
+.account-row-label {
+  color: #111827;
+  font-size: 0.95rem;
+}
+
+.account-row-label--name {
+  font-weight: 700;
+}
+
+.account-row-value {
+  color: #6b7280; /* lighter gray values */
+  font-size: 0.9rem;
+}
+
+.account-link {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.account-link:hover {
+  text-decoration: underline;
+  color: #374151;
+}
+
+.account-row-right {
+  min-width: 190px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.account-row-button {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 24, 39, 0.18);
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.account-row-button:hover {
+  background: #f3f4f6;
+}
