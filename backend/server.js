@@ -1,4 +1,4 @@
-require('dotenv').config(); 
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -17,7 +17,6 @@ const authMiddleware =
 
 const app = express();
 
-// Parse FRONTEND_ORIGIN from .env (
 const frontendOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3002')
   .split(',')
   .map((origin) => origin.trim());

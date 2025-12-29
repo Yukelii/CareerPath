@@ -1,40 +1,71 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
+
+import { Header } from './components/Header';
+
 import { HomePage } from './pages/HomePage';
 import { RoadmapPage } from './pages/RoadmapPage';
-import { Header } from './components/Header';
+import { GuidePage } from './pages/GuidePage';
+
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import LogoutPage from './pages/LogoutPage';
+
 import { AccountLayout } from './pages/AccountLayout';
 import { ProfileSection } from './pages/ProfileSection';
 import { SettingsSection } from './pages/SettingsSection';
 import { ProgressSection } from './pages/ProgressSection';
-import { GuidePage } from './pages/GuidePage';
+
 import './App.css';
 
-function App() {
+function AppShell() {
+  const location = useLocation();
+
+  const hideHeader =
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/logout';
+
   return (
-    <Router>
-      {/* Header is shown on all pages */}
-      <Header />
+    <>
+      {!hideHeader && <Header />}
 
       <Routes>
-        {/* Existing routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
+
         <Route path="/" element={<HomePage />} />
+
+        {/* Keep both if some parts of your app use either */}
         <Route path="/roadmap/:roadmapId" element={<RoadmapPage />} />
+        <Route path="/roadmaps/:roadmapId" element={<RoadmapPage />} />
+
         <Route path="/guides" element={<GuidePage />} />
-        {/* Account/settings area with nested routes */}
+
         <Route path="/account" element={<AccountLayout />}>
-          {/* default tab when hitting /account */}
           <Route index element={<Navigate to="profile" replace />} />
           <Route path="profile" element={<ProfileSection />} />
           <Route path="settings" element={<SettingsSection />} />
           <Route path="progress" element={<ProgressSection />} />
         </Route>
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <AppShell />
+    </Router>
+  );
+}

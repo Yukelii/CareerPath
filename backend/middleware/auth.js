@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = (req, res, next) => {
+module.exports = (req, res, next) => {
   const cookieName = process.env.AUTH_COOKIE_NAME || 'careerpath_token';
   const token = req.cookies?.[cookieName];
 
@@ -11,10 +11,8 @@ const authMiddleware = (req, res, next) => {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = payload.userId;
-    next();
+    return next();
   } catch (err) {
     return res.status(401).json({ error: 'Invalid/expired token' });
   }
 };
-
-module.exports = authMiddleware;

@@ -1,35 +1,88 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Navbar, Dropdown, Form, InputGroup } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
-import {
-  searchRoadmapsByNodeTitle,
-  RoadmapSearchHit,
-} from '../data/roadmaps/searchRoadmaps';
-
-interface HeaderProps {
-  userName?: string;
-  userImage?: string;
-}
+import { searchRoadmapsByNodeTitle, RoadmapSearchHit } from '../data/roadmaps/searchRoadmaps';
 
 interface SearchSuggestion {
-  label: string;      // "Figma / UX Design"
-  roadmapId: string;  // "ux-design"
+  label: string;
+  roadmapId: string;
   nodeId: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  userName = 'Zaidy',
-  userImage = 'https://via.placeholder.com/40',
-}) => {
+interface CurrentUser {
+  id: number;
+  name: string;
+  email: string;
+  program?: string;
+  section?: string;
+}
+
+export const Header: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Recompute suggestions when user types
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const fetchCurrentUser = useCallback(async () => {
+    const controller = new AbortController();
+
+    try {
+      setUserLoading(true);
+
+      // If you use CRA proxy, this relative URL is correct.
+      const res = await fetch('/api/users/me', {
+        credentials: 'include',
+        signal: controller.signal,
+      });
+
+      if (!res.ok) {
+        setUser(null);
+        return;
+      }
+
+      const data: CurrentUser = await res.json();
+      setUser(data);
+    } catch (err: any) {
+      // Ignore abort errors
+      if (err?.name !== 'AbortError') {
+        console.error('Error fetching user:', err);
+      }
+      setUser(null);
+    } finally {
+      setUserLoading(false);
+    }
+
+    return () => controller.abort();
+  }, []);
+
+  // 1) Re-fetch user whenever route changes (login/logout navigations update Header immediately)
+  useEffect(() => {
+    fetchCurrentUser();
+  }, [fetchCurrentUser, location.key]);
+
+  // 2) Re-fetch when tab/window becomes active (helps when cookie changes)
+  useEffect(() => {
+    const onFocus = () => fetchCurrentUser();
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [fetchCurrentUser]);
+
+  // 3) Optional: allow other pages to force-refresh Header after login/logout
+  useEffect(() => {
+    const onAuthChanged = () => fetchCurrentUser();
+    window.addEventListener('auth-changed', onAuthChanged);
+    return () => window.removeEventListener('auth-changed', onAuthChanged);
+  }, [fetchCurrentUser]);
+
+  // Suggestions recompute
   useEffect(() => {
     const q = searchValue.trim();
     if (!q) {
@@ -39,12 +92,11 @@ export const Header: React.FC<HeaderProps> = ({
     }
 
     const hits: RoadmapSearchHit[] = searchRoadmapsByNodeTitle(q);
-
     const next: SearchSuggestion[] = [];
     hits.forEach((hit) => {
       hit.matchingNodes.forEach((node) => {
         next.push({
-          label: `${node.title} / ${hit.roadmap.title}`,
+          label: `${node.title} (${hit.roadmap.title})`,
           roadmapId: hit.roadmap.id,
           nodeId: node.id,
         });
@@ -59,27 +111,32 @@ export const Header: React.FC<HeaderProps> = ({
     if (!searchOpen) {
       setSearchOpen(true);
       setTimeout(() => inputRef.current?.focus(), 0);
-      return;
     }
   };
 
   const handleSuggestionClick = (s: SearchSuggestion) => {
-    navigate(`/roadmap/${s.roadmapId}`);
+    navigate(`/roadmaps/${s.roadmapId}`);
     setShowSuggestions(false);
   };
 
-  const goToAccount = (section: 'profile' | 'settings' | 'progress') => {
+  const goToAccount = (section: string) => {
     navigate(`/account/${section}`);
   };
 
+  const handleLogoutClick = () => {
+    // Instantly update UI (no waiting)
+    setUser(null);
+    setUserLoading(false);
+    navigate('/logout');
+  };
+
   return (
-    <Navbar bg="dark" expand="lg" className="header-navbar px-4">
+    <Navbar bg="dark" expand="xxl" className="header-navbar px-5">
       <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">
         Career Path
       </Navbar.Brand>
 
       <div className="ms-auto d-flex align-items-center gap-3">
-        {/* Compact search area – fixed width so header does not stretch */}
         <div className="header-search-shell">
           {searchOpen && (
             <div className="header-search-panel">
@@ -96,33 +153,29 @@ export const Header: React.FC<HeaderProps> = ({
 
               {showSuggestions && (
                 <div className="header-search-dropdown">
-                  <div className="header-search-current">
-                    {searchValue || '\u00A0'}
-                  </div>
-
+                  <div className="header-search-current">{searchValue}</div>
                   <ul className="header-search-list">
-                    {suggestions.length === 0 && searchValue.trim() && (
+                    {suggestions.length === 0 && searchValue.trim() ? (
                       <li className="header-search-item header-search-empty">
                         No nodes found.
                       </li>
+                    ) : (
+                      suggestions.map((sugg) => (
+                        <li
+                          key={`${sugg.roadmapId}-${sugg.nodeId}`}
+                          className="header-search-item"
+                          onClick={() => handleSuggestionClick(sugg)}
+                        >
+                          {sugg.label}
+                        </li>
+                      ))
                     )}
-
-                    {suggestions.map((sugg) => (
-                      <li
-                        key={`${sugg.roadmapId}-${sugg.nodeId}`}
-                        className="header-search-item"
-                        onClick={() => handleSuggestionClick(sugg)}
-                      >
-                        {sugg.label}
-                      </li>
-                    ))}
                   </ul>
                 </div>
               )}
             </div>
           )}
 
-          {/* Search Icon */}
           <button
             type="button"
             className="btn btn-link text-light p-0"
@@ -135,48 +188,42 @@ export const Header: React.FC<HeaderProps> = ({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth={2}
             >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
             </svg>
           </button>
         </div>
 
-        {/* User menu */}
-        <Dropdown align="end">
-          <Dropdown.Toggle
-            variant="link"
-            className="d-flex align-items-center gap-2 text-light text-decoration-none p-0"
-            id="user-dropdown"
-          >
-            <span className="fw-500">{userName}</span>
-            <img
-              src={userImage}
-              alt="Profile"
-              className="rounded-circle"
-              width="32"
-              height="32"
-            />
-          </Dropdown.Toggle>
+        {userLoading ? (
+          <span className="text-light">Loading...</span>
+        ) : user ? (
+          <Dropdown align="end">
+            <Dropdown.Toggle
+              variant="link"
+              className="d-flex align-items-center gap-2 text-light text-decoration-none p-0"
+              id="user-dropdown"
+            >
+              <span className="fw-5">{user.name}</span>
+            </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => goToAccount('profile')}>
-              Profile
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => goToAccount('settings')}>
-              Settings
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => goToAccount('progress')}>
-              Progress
-            </Dropdown.Item>
-            <Dropdown.Item href="#assessment">Assessment</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item href="#logout" className="text-danger">
-              Log out
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => goToAccount('profile')}>Profile</Dropdown.Item>
+              <Dropdown.Item onClick={() => goToAccount('settings')}>Settings</Dropdown.Item>
+              <Dropdown.Item onClick={() => goToAccount('progress')}>Progress</Dropdown.Item>
+              <Dropdown.Item href="/assessment">Assessment</Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={handleLogoutClick} className="text-danger">
+                Log out
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        ) : (
+          <button onClick={() => navigate('/login')} className="button">
+            Log in
+          </button>
+        )}
       </div>
     </Navbar>
   );
