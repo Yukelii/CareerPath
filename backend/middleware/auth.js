@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const cookieName = process.env.AUTH_COOKIE_NAME || 'careerpath_token';
+  const cookieName = process.env.AUTH_COOKIE_NAME || "careerpath_token";
   const token = req.cookies?.[cookieName];
 
   if (!token) {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.status(401).json({ error: "Not authenticated" });
   }
 
   try {
@@ -13,6 +13,6 @@ module.exports = (req, res, next) => {
     req.userId = payload.userId;
     return next();
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid/expired token' });
+    return res.status(401).json({ error: "Invalid/expired token" });
   }
 };

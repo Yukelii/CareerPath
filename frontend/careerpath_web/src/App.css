@@ -13,8 +13,10 @@ body {
 #root {
   min-height: 100vh;
 }
+
+/* Existing Guides banner */
 .home-guides-section {
-  background: linear-gradient(135deg, #111715 0%, #1a1a1a 100%);
+  background: #111715;
   padding: 3rem 1rem;
 }
 
@@ -49,5 +51,46 @@ body {
 }
 
 .home-guides-cta-btn:hover {
+  background-color: #6b8369;
+}
+
+/* NEW: Resume Analyzer banner (matching style) */
+.home-resume-section {
+  background: #111715;
+  padding: 3rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.home-resume-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.home-resume-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.home-resume-subtitle {
+  margin: 0 0 1.5rem 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+}
+
+.home-resume-cta-btn {
+  background-color: #7a8f79;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.6rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home-resume-cta-btn:hover {
   background-color: #6b8369;
 }

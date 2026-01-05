@@ -27,7 +27,8 @@ export const HomePage: React.FC = () => {
   }, [bookmarkedIds]);
 
   const handleCardClick = (careerId: string) => {
-    navigate(`/roadmap/${careerId}`);
+    // must match your router + Header (plural) [file:435][file:455]
+    navigate(`/roadmaps/${careerId}`);
   };
 
   // Load bookmarks from backend on homepage load
@@ -40,7 +41,7 @@ export const HomePage: React.FC = () => {
         const bookmarks = await defaultProgressRepository.fetchBookmarkedRoadmaps();
         if (cancelled) return;
 
-        const ids = new Set(bookmarks.map((b) => b.roadmap_id));
+        const ids = new Set(bookmarks.map((b: any) => b.roadmap_id));
         setBookmarkedIds(ids);
       } catch (err) {
         console.error('Failed to load bookmarks:', err);
@@ -88,7 +89,8 @@ export const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
+      {/* Roadmap cards FIRST */}
       <RoadmapSection
         careers={CAREERS}
         onCardClick={handleCardClick}
@@ -97,7 +99,7 @@ export const HomePage: React.FC = () => {
         bookmarksLoading={loadingBookmarks}
       />
 
-      {/* Guides / Resources section (new) */}
+      {/* Guides banner */}
       <section className="home-guides-section">
         <div className="home-guides-container">
           <h2 className="home-guides-title">Guides</h2>
@@ -105,15 +107,25 @@ export const HomePage: React.FC = () => {
             Explore guides, tutorials, projects, and websites tailored for your chosen career.
           </p>
 
-          <button
-            className="home-guides-cta-btn"
-            type="button"
-            onClick={() => navigate('/guides')}
-          >
+          <button className="home-guides-cta-btn" onClick={() => navigate('/guides')}>
             View All Guides →
           </button>
         </div>
       </section>
-    </div>
+
+      {/* Resume Analyzer banner */}
+      <section className="home-resume-section">
+        <div className="home-resume-container">
+          <h2 className="home-resume-title">Resume Analyzer</h2>
+          <p className="home-resume-subtitle">
+            Upload your resume to get strengths, weaknesses, and a recommended CareerPath track with a 12-week plan.
+          </p>
+
+          <button className="home-resume-cta-btn" onClick={() => navigate('/resume-analysis')}>
+            Analyze My Resume →
+          </button>
+        </div>
+      </section>
+    </>
   );
 };

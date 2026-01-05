@@ -261,6 +261,9 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
 
       const edgeKey = `${edge.id}-${edge.source}-${edge.target}-${idx}`;
 
+      
+      const strokeWidth = 3;
+
       if (edgeType === 'straight') {
         return (
           <path
@@ -268,7 +271,7 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
             d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`}
             fill="none"
             stroke="rgba(0,0,0,0.4)"
-            strokeWidth={2}
+            strokeWidth={strokeWidth}
             className="roadmap-edge"
             style={{ pointerEvents: 'none' }}
           />
@@ -282,7 +285,7 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
           d={`M ${a.x} ${a.y} L ${midX} ${a.y} L ${midX} ${b.y} L ${b.x} ${b.y}`}
           fill="none"
           stroke="rgba(0,0,0,0.4)"
-          strokeWidth={2}
+          strokeWidth={strokeWidth}
           className="roadmap-edge"
           style={{ pointerEvents: 'none' }}
         />
@@ -293,6 +296,15 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
     nodes.map((node) => {
       const { w, h } = getNodeSize(node);
 
+      const isHovered = hoveredNode === node.id;
+
+
+      const baseStroke = 'rgba(0,0,0,0.55)';
+      const hoverStroke = '#111';
+
+      const baseStrokeWidth = 2;
+      const hoverStrokeWidth = 3;
+
       return (
         <g key={node.id}>
           <rect
@@ -302,8 +314,8 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
             height={h}
             rx={8}
             fill={node.color}
-            stroke={hoveredNode === node.id ? '#333' : 'rgba(0,0,0,0.1)'}
-            strokeWidth={hoveredNode === node.id ? 2 : 1}
+            stroke={isHovered ? hoverStroke : baseStroke}
+            strokeWidth={isHovered ? hoverStrokeWidth : baseStrokeWidth}
             className="roadmap-node"
             onClick={() => onNodeClick(node)}
             onMouseEnter={() => setHoveredNode(node.id)}
@@ -365,10 +377,9 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
   const handleTrackProgress = () => {
     if (!sortedNodes.length) return;
 
-    // unfinished = not done and not skip; undefined counts as unfinished
     const firstUnfinished =
       sortedNodes.find((n) => {
-        const s = nodeStatuses[n.id]; // may be undefined
+        const s = nodeStatuses[n.id];
         return s !== 'done' && s !== 'skip';
       }) ?? sortedNodes[0];
 
@@ -423,9 +434,7 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
           <div>
             <div style={{ fontSize: 12, color: '#7a7a7a' }}>All Roadmaps</div>
             <div style={{ fontSize: 34, fontWeight: 700, marginTop: 6 }}>{title}</div>
-            {subtitle && (
-              <div style={{ fontSize: 13, color: '#777', marginTop: 6 }}>{subtitle}</div>
-            )}
+            {subtitle && <div style={{ fontSize: 13, color: '#777', marginTop: 6 }}>{subtitle}</div>}
           </div>
 
           <button
@@ -502,9 +511,7 @@ export const RoadmapCanvas: React.FC<RoadmapCanvasProps> = ({
       </div>
 
       {maxViewportHeight ? (
-        <div style={{ maxHeight: maxViewportHeight, overflowY: 'auto', overflowX: 'auto' }}>
-          {svg}
-        </div>
+        <div style={{ maxHeight: maxViewportHeight, overflowY: 'auto', overflowX: 'auto' }}>{svg}</div>
       ) : (
         svg
       )}

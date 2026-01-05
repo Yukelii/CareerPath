@@ -26,6 +26,10 @@
   font-size: 1rem;
 }
 
+.account-link-text {
+color: #000000;
+}
+
 .account-link-inner {
   display: inline-flex;
   align-items: center;

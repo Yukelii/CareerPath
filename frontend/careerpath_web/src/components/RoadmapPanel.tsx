@@ -126,7 +126,7 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
                     setDropdownOpen(false);
                   }}
                 >
-                  ✓ Done (D)
+                   Done (D)
                 </button>
                 <button
                   className="status-option"
@@ -136,7 +136,7 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
                     setDropdownOpen(false);
                   }}
                 >
-                  ⟳ In Progress (L)
+                   In Progress (L)
                 </button>
                 <button
                   className="status-option"
@@ -146,7 +146,7 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
                     setDropdownOpen(false);
                   }}
                 >
-                  ✕ Skip (S)
+                   Skip (S)
                 </button>
                 <button
                   className="status-option"
@@ -156,7 +156,7 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
                     setDropdownOpen(false);
                   }}
                 >
-                  ⏳ Pending (P)
+                   Pending (P)
                 </button>
               </div>
             )}
@@ -166,7 +166,7 @@ export const RoadmapPanel: React.FC<RoadmapPanelProps> = ({
 
       {/* Footer hint */}
       <div className="panel-footer">
-        <small>💡 Press D/L/S/P for quick status, Esc to close</small>
+        <small> Press D/L/S/P for quick status, Esc to close</small>
       </div>
     </div>
   );

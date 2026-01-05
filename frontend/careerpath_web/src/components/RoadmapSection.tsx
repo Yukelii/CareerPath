@@ -10,8 +10,6 @@ interface Career {
 interface RoadmapSectionProps {
   careers: Career[];
   onCardClick: (careerId: string) => void;
-
-  // NEW: controlled bookmark state (from HomePage, backed by API)
   isBookmarkedMap?: Record<string, boolean>;
   onBookmarkToggle?: (careerId: string) => void;
   bookmarksLoading?: boolean;

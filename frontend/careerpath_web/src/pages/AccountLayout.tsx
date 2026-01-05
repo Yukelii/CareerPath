@@ -1,7 +1,7 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
 import { NavLink, Outlet } from 'react-router-dom';
-import { User, Settings, BarChart3 } from 'lucide-react';
+import { User, Settings, BarChart3, FileText } from 'lucide-react';
 import './AccountLayout.css';
 
 export const AccountLayout: React.FC = () => {
@@ -39,6 +39,12 @@ export const AccountLayout: React.FC = () => {
             <span className="account-link-inner">
               <BarChart3 className="account-link-icon" size={18} />
               <span className="account-link-text">Progress</span>
+            </span>
+          </Nav.Link>
+          <Nav.Link as={NavLink} to="resume-analysis" className="account-link">
+            <span className="account-link-inner">
+             <FileText className="account-link-icon" size={18} />
+             <span className="account-link-text">Resume Analysis</span>
             </span>
           </Nav.Link>
         </Nav>

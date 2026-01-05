@@ -1,74 +1,258 @@
-/* Shell around icon + search so width is fixed */
+
+
+.header-navbar {
+  min-height: 50px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+
+
+  align-items: center;
+}
+
+
+.header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  text-decoration: none;
+  user-select: none;
+
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(17, 23, 21, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+
+.header-logo {
+  width: 36px;
+  height: 36px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+}
+
+.header-brand-text {
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.2px;
+  color: rgba(210, 214, 204, 0.95);
+}
+
+.header-brand:hover .header-brand-text {
+  color: rgba(245, 245, 245, 0.92);
+}
+
+
 .header-search-shell {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+
+  padding: 0.55rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(17, 23, 21, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
 }
 
-/* Panel with input + dropdown */
 .header-search-panel {
   position: relative;
-  width: 260px;      /* fixed width */
+  width: 300px;
 }
 
-/* Input styling */
 .header-search-input-group {
   width: 100%;
 }
 
 .header-search-input-group .form-control {
-  background-color: #55594f;
-  border: none;
-  color: #ffffff;
+  width: 100%;
+  background-color: rgba(85, 89, 79, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(245, 245, 245, 0.92);
+
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 999px;
+
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .header-search-input-group .form-control::placeholder {
-  color: #cfd2c9;
+  color: rgba(190, 190, 190, 0.9);
+  opacity: 1;
 }
 
-/* Dropdown under the input */
+.header-search-input-group .form-control:focus {
+  background-color: rgba(85, 89, 79, 0.85);
+  border-color: rgba(122, 143, 121, 0.85);
+  box-shadow: 0 0 0 4px rgba(122, 143, 121, 0.18);
+}
+
 .header-search-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  margin-top: 4px;
-  background-color: #f5f5f5;
-  color: #111827;
-  border-radius: 0 0 6px 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+
+  background: rgba(17, 23, 21, 0.92);
+  color: rgba(245, 245, 245, 0.92);
+
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   z-index: 1050;
 }
 
-/* Top row with current query */
 .header-search-current {
-  padding: 8px 12px;
-  background-color: #e5e7eb;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #d1d5db;
+  padding: 12px 14px;
+  background: rgba(122, 143, 121, 0.18);
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(245, 245, 245, 0.85);
 }
 
-/* Suggestions list */
 .header-search-list {
   list-style: none;
   margin: 0;
-  padding: 0;
-  max-height: 260px;
+  padding: 8px;
+  max-height: 320px;
   overflow-y: auto;
 }
 
+.header-search-list::-webkit-scrollbar {
+  width: 10px;
+}
+.header-search-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+.header-search-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .header-search-item {
-  padding: 8px 12px;
-  font-size: 0.9rem;
+  padding: 12px 12px;
+  font-size: 0.95rem;
   cursor: pointer;
+  border-radius: 10px;
+  color: rgba(245, 245, 245, 0.9);
+  transition: background 0.15s ease, transform 0.12s ease;
 }
 
 .header-search-item:hover {
-  background-color: #e5e7eb;
+  background: rgba(122, 143, 121, 0.22);
+  transform: translateY(-1px);
 }
 
 .header-search-empty {
-  color: #6b7280;
+  color: rgba(200, 200, 200, 0.85);
+}
+
+
+.header-user-dropdown-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.55rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(17, 23, 21, 0.35) !important;
+  color: rgba(245, 245, 245, 0.9) !important;
+
+  padding: 0.7rem 0.95rem !important;
+  border-radius: 999px !important;
+
+  text-decoration: none !important;
+  box-shadow: none !important;
+
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+
+.header-user-dropdown-btn:hover {
+  background: rgba(17, 23, 21, 0.5) !important;
+}
+
+.header-user-dropdown-btn:focus,
+.header-user-dropdown-btn:active {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(122, 143, 121, 0.18) !important;
+  border-color: rgba(122, 143, 121, 0.85) !important;
+}
+
+.header-user-name {
+  font-weight: 700;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+.header-user-dropdown-menu {
+  margin-top: 12px !important;
+  background: rgba(17, 23, 21, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 14px !important;
+  padding: 10px !important;
+  min-width: 240px !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45) !important;
+}
+
+.header-user-dropdown-item {
+  border-radius: 10px !important;
+  padding: 12px 12px !important;
+  color: rgba(245, 245, 245, 0.92) !important;
+  background: transparent !important;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.header-user-dropdown-item:hover {
+  background: rgba(122, 143, 121, 0.22) !important;
+  transform: translateY(-1px);
+}
+
+.header-user-dropdown-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+  margin: 10px 0 !important;
+}
+
+.header-user-dropdown-danger {
+  color: rgba(255, 190, 190, 0.95) !important;
+}
+
+.header-user-dropdown-danger:hover {
+  background: rgba(220, 38, 38, 0.18) !important;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 640px) {
+  .header-navbar {
+    min-height: 88px;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+  }
+
+  .header-search-panel {
+    width: 210px;
+  }
+
+  .header-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-brand-text {
+    font-size: 1.05rem;
+  }
 }

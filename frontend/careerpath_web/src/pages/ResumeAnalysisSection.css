@@ -1,0 +1,112 @@
+.rah-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rah-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rah-title {
+  margin: 0;
+  color: #e5e7eb;
+}
+
+.rah-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.rah-btn {
+  background: #7bc47f;
+  color: #0b1a0c;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rah-btn--ghost {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid #3a3d33;
+}
+
+.rah-muted {
+  color: #9ca3af;
+  padding: 0.5rem 0;
+}
+
+.rah-error {
+  color: #ef4444;
+}
+
+.rah-empty {
+  color: #cbd5e1;
+  background: #1f221b;
+  border: 1px solid #2d3128;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rah-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.rah-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rah-list-item {
+  text-align: left;
+  background: #2a2d24;
+  border: 1px solid #2f332a;
+  border-radius: 14px;
+  padding: 0.85rem;
+  cursor: pointer;
+  color: #e5e7eb;
+}
+
+.rah-list-item.active {
+  border-color: #7bc47f;
+  box-shadow: 0 0 0 2px rgba(123, 196, 127, 0.15);
+}
+
+.rah-list-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.rah-list-name {
+  font-weight: 700;
+}
+
+.rah-list-score {
+  color: #c4f1c4;
+  font-weight: 700;
+}
+
+.rah-list-date {
+  margin-top: 0.25rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.rah-detail {
+  min-height: 200px;
+}

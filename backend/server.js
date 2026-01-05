@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const progressRoutes = require('./routes/progressRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const guideRoutes = require('./routes/guideRoutes');
+const resumeRoutes = require('./routes/resumeRoutes');
 
 const authMiddleware =
   process.env.USE_DEV_AUTH === 'true'
@@ -50,6 +51,10 @@ app.use('/api/users', authMiddleware, userRoutes);
 app.use('/api/progress', authMiddleware, progressRoutes);
 app.use('/api/bookmarks', authMiddleware, bookmarkRoutes);
 app.use('/api/guides', authMiddleware, guideRoutes);
+
+
+app.use('/api/resume', authMiddleware, resumeRoutes);
+
 
 // 404
 app.use((req, res) => {

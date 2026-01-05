@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Navbar, Dropdown, Form, InputGroup } from 'react-bootstrap';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+// Remove svg import to avoid loader issues when replacing the SVG
+// import logo from '../logo.svg';
 import './Header.css';
 import { searchRoadmapsByNodeTitle, RoadmapSearchHit } from '../data/roadmaps/searchRoadmaps';
 
@@ -37,7 +39,6 @@ export const Header: React.FC = () => {
     try {
       setUserLoading(true);
 
-      // If you use CRA proxy, this relative URL is correct.
       const res = await fetch('/api/users/me', {
         credentials: 'include',
         signal: controller.signal,
@@ -51,7 +52,6 @@ export const Header: React.FC = () => {
       const data: CurrentUser = await res.json();
       setUser(data);
     } catch (err: any) {
-      // Ignore abort errors
       if (err?.name !== 'AbortError') {
         console.error('Error fetching user:', err);
       }
@@ -63,26 +63,22 @@ export const Header: React.FC = () => {
     return () => controller.abort();
   }, []);
 
-  // 1) Re-fetch user whenever route changes (login/logout navigations update Header immediately)
   useEffect(() => {
     fetchCurrentUser();
   }, [fetchCurrentUser, location.key]);
 
-  // 2) Re-fetch when tab/window becomes active (helps when cookie changes)
   useEffect(() => {
     const onFocus = () => fetchCurrentUser();
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, [fetchCurrentUser]);
 
-  // 3) Optional: allow other pages to force-refresh Header after login/logout
   useEffect(() => {
     const onAuthChanged = () => fetchCurrentUser();
     window.addEventListener('auth-changed', onAuthChanged);
     return () => window.removeEventListener('auth-changed', onAuthChanged);
   }, [fetchCurrentUser]);
 
-  // Suggestions recompute
   useEffect(() => {
     const q = searchValue.trim();
     if (!q) {
@@ -93,6 +89,7 @@ export const Header: React.FC = () => {
 
     const hits: RoadmapSearchHit[] = searchRoadmapsByNodeTitle(q);
     const next: SearchSuggestion[] = [];
+
     hits.forEach((hit) => {
       hit.matchingNodes.forEach((node) => {
         next.push({
@@ -124,7 +121,6 @@ export const Header: React.FC = () => {
   };
 
   const handleLogoutClick = () => {
-    // Instantly update UI (no waiting)
     setUser(null);
     setUserLoading(false);
     navigate('/logout');
@@ -132,9 +128,10 @@ export const Header: React.FC = () => {
 
   return (
     <Navbar bg="dark" expand="xxl" className="header-navbar px-5">
-      <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">
-        Career Path
-      </Navbar.Brand>
+      <a href="/" className="header-brand">
+        <img src="/logo.svg" alt="CareerPath logo" className="header-logo" />
+        <span className="header-brand-text">CareerPath</span>
+      </a>
 
       <div className="ms-auto d-flex align-items-center gap-3">
         <div className="header-search-shell">
@@ -199,22 +196,33 @@ export const Header: React.FC = () => {
         {userLoading ? (
           <span className="text-light">Loading...</span>
         ) : user ? (
-          <Dropdown align="end">
+          <Dropdown align="end" className="header-user-dropdown">
             <Dropdown.Toggle
               variant="link"
-              className="d-flex align-items-center gap-2 text-light text-decoration-none p-0"
+              className="header-user-dropdown-btn"
               id="user-dropdown"
             >
-              <span className="fw-5">{user.name}</span>
+              <span className="header-user-name">{user.name}</span>
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => goToAccount('profile')}>Profile</Dropdown.Item>
-              <Dropdown.Item onClick={() => goToAccount('settings')}>Settings</Dropdown.Item>
-              <Dropdown.Item onClick={() => goToAccount('progress')}>Progress</Dropdown.Item>
-              <Dropdown.Item href="/assessment">Assessment</Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item onClick={handleLogoutClick} className="text-danger">
+            <Dropdown.Menu className="header-user-dropdown-menu">
+              <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('profile')}>
+                Profile
+              </Dropdown.Item>
+              <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('settings')}>
+                Settings
+              </Dropdown.Item>
+              <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('progress')}>
+                Progress
+              </Dropdown.Item>
+              <Dropdown.Item className="header-user-dropdown-item"  onClick={() => navigate('/resume-analysis')}>
+                Resume Analysis
+              </Dropdown.Item>
+              <Dropdown.Divider className="header-user-dropdown-divider" />
+              <Dropdown.Item
+                className="header-user-dropdown-item header-user-dropdown-danger"
+                onClick={handleLogoutClick}
+              >
                 Log out
               </Dropdown.Item>
             </Dropdown.Menu>
