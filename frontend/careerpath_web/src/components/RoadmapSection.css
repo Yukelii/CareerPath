@@ -1,6 +1,6 @@
 .roadmap-page {
-  background-color: #111715;        /* full-page dark background */
-  min-height: calc(100vh - 72px);   /* fill below header */
+  background-color: #111715;       
+  min-height: calc(75vh - 72px);   /* fill below header */
 }
 
 .roadmap-section {

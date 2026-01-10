@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoadmapSection } from '../components/RoadmapSection';
 import { defaultProgressRepository } from '../data/repositories/progressRepository';
+import { Footer } from '../components/Footer';
 
 // Slug-based career IDs
 const CAREERS = [
@@ -27,7 +28,6 @@ export const HomePage: React.FC = () => {
   }, [bookmarkedIds]);
 
   const handleCardClick = (careerId: string) => {
-    // must match your router + Header (plural) [file:435][file:455]
     navigate(`/roadmaps/${careerId}`);
   };
 
@@ -126,6 +126,9 @@ export const HomePage: React.FC = () => {
           </button>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 };

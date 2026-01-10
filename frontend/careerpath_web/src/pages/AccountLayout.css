@@ -7,7 +7,7 @@
 
 .account-sidebar {
   width: 220px;
-  background-color: #666a60;
+  background-color: #1a1d1d;
   display: flex;
   flex-direction: column;
 }
@@ -27,7 +27,7 @@
 }
 
 .account-link-text {
-color: #000000;
+color: #cecaca;
 }
 
 .account-link-inner {
@@ -45,7 +45,7 @@ color: #000000;
 
 /* Icon color */
 .account-link-icon {
-  color: #c4f1c4;
+  color: #cecaca;
 }
 
 /* Text span (in case you want extra control later) */
@@ -57,4 +57,5 @@ color: #000000;
 .account-content {
   flex: 1;
   padding: 2rem;
+  background-color: #1e1f1d !important;
 }

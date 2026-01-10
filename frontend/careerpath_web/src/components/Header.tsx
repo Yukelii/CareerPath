@@ -209,9 +209,6 @@ export const Header: React.FC = () => {
               <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('profile')}>
                 Profile
               </Dropdown.Item>
-              <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('settings')}>
-                Settings
-              </Dropdown.Item>
               <Dropdown.Item className="header-user-dropdown-item" onClick={() => goToAccount('progress')}>
                 Progress
               </Dropdown.Item>
